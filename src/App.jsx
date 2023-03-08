@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import Form from './components/InputForm'
 import FoodItem from './components/FoodItem'
 import "./style.css";
@@ -10,30 +10,41 @@ import "./style.css";
   
 
 export default function App() {
-  const [list, setList] = useState([
-    {
-      price: "100", name: "Apple", id: 1,
+
+let initialState = [
+    { price: "100", name: "Apple", id: 1,
       img: "https://ychef.files.bbci.co.uk/976x549/p07v2wjn.jpg",
-      desc:"The best Apples in The World!"
-    },
+      desc:"The best Apples in The World!"   },
 
     { price: "2", id: 2, name: "Passionfruit", img: "https://post.healthline.com/wp-content/uploads/2020/09/fruit-still-life-732x549-thumbnail-732x549.jpg",
   desc:"This is item description" },
 
     { price: "3", id: 3, name: "Many Fruit In One", img: "https://content.jdmagicbox.com/comp/def_content/fruit-vendors/shutterstock-763518739-fruit-vendors-5-8wlk2.jpg?clr=660000",
-  desc:"This is item description" },
+  desc:"This is item description" } ]
 
-  ])
+if(localStorage.getItem("list") !== null){
+  initialState = JSON.parse(localStorage.getItem("list"))
+}
+
+
+  const [list, setList] = useState(initialState)
+
+
 
   const addList = (listItem) => {
 
     setList([...list, listItem]);
+
   }
+
+
   const deleteList = (food) => {
     console.log("Food is deleting..")
     setList(
       list.filter((e) => e !== food)
     )
+
+    localStorage.setItem("list",JSON.stringify(list))
 
       toast.success('item is deleted !', {
 position: "top-right",
@@ -47,6 +58,10 @@ theme: "dark",
 });
 
   }
+
+    useEffect(() => {
+    localStorage.setItem("list", JSON.stringify(list));
+  }, [list]);
 
   // const [person, setPerson] = useState([
   //   { name: 'suman', id:1 },
